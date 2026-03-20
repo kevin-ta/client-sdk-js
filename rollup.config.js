@@ -32,22 +32,26 @@ export const commonPlugins = [
 /**
  * @type {import('rollup').RollupOptions}
  */
+// Strip npm scope (e.g. "@kevin-ta/livekit-client" → "livekit-client") so that
+// output file names stay consistent with the paths declared in package.json exports.
+const packageBaseName = packageJson.name.replace(/^@[^/]+\//, '');
+
 export default {
   input: 'src/index.ts',
   output: [
     {
-      file: `dist/${packageJson.name}.esm.mjs`,
+      file: `dist/${packageBaseName}.esm.mjs`,
       format: 'es',
       strict: true,
       sourcemap: true,
       compact: true,
     },
     {
-      file: `dist/${packageJson.name}.umd.js`,
+      file: `dist/${packageBaseName}.umd.js`,
       format: 'umd',
       strict: true,
       sourcemap: true,
-      name: kebabCaseToPascalCase(packageJson.name),
+      name: kebabCaseToPascalCase(packageBaseName),
       plugins: [terser()],
     },
   ],
